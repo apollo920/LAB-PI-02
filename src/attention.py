@@ -13,28 +13,42 @@ def scaled_dot_product_attention(Q, K, V):
    
     dk = Q.shape[-1]  
 
+   
+    scores = Q @ K.transpose(0, 2, 1)  
+
+    
     scores = scores / np.sqrt(dk)
 
-    weights = softmax(scores) 
+   
+    weights = softmax(scores)  
 
+    
     output = weights @ V  
 
     return output, weights
 
 
 class SingleHeadAttention:
- 
+    """
+    Self-attention com uma unica cabeca.
+    Mais simples que multi-head, mas a logica central eh a mesma.
+    """
+
     def __init__(self, d_model):
         self.d_model = d_model
+        
         self.dk = d_model
-
         self.W_Q = np.random.randn(d_model, self.dk) * 0.1
         self.W_K = np.random.randn(d_model, self.dk) * 0.1
         self.W_V = np.random.randn(d_model, self.dk) * 0.1
 
     def forward(self, X):
-
-        Q = X @ self.W_Q 
+        """
+        X: tensor de entrada, shape (batch, seq, d_model)
+        Retorna: output de atencao, shape (batch, seq, d_model)
+        """
+        
+        Q = X @ self.W_Q  
         K = X @ self.W_K  
         V = X @ self.W_V  
 
